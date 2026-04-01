@@ -1,2 +1,2 @@
 # Menu-webpage
-Created a webpage using AI
+Created a food ordering menu webpage for the restaurant using AI.
