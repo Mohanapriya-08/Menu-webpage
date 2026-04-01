@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMBER — Modern Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #FF4D1C;
+    --gold: #F5A623;
+    --cream: #FFF8EF;
+    --charcoal: #1A1208;
+    --brown: #3D1F00;
+    --muted: #8C7B6B;
+    --card-bg: #FFFBF5;
+    --tag-green: #2D7A4F;
+    --tag-red: #C0392B;
+    --shadow: 0 8px 40px rgba(26,18,8,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    overflow: hidden;
+    background: var(--charcoal);
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,77,28,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(245,166,35,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 20% 70%, rgba(255,77,28,0.1) 0%, transparent 60%);
+    animation: pulseGlow 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulseGlow {
+    from { opacity: 0.7; }
+    to   { opacity: 1; }
+  }
+
+  /* Flame particles */
+  .particle {
+    position: absolute;
+    border-radius: 50% 50% 30% 30%;
+    animation: rise linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes rise {
+    0%   { transform: translateY(0) scaleX(1); opacity: 0.8; }
+    50%  { transform: translateY(-40vh) scaleX(0.7) rotate(10deg); opacity: 0.5; }
+    100% { transform: translateY(-90vh) scaleX(0.3); opacity: 0; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 12vw, 10rem);
+    font-weight: 900;
+    line-height: 0.9;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+
+  .hero-title span {
+    display: block;
+    -webkit-text-stroke: 2px var(--ember);
+    color: transparent;
+    font-style: italic;
+  }
+
+  .hero-tagline {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(255,248,239,0.65);
+    letter-spacing: 0.05em;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero-btn {
+    margin-top: 2.5rem;
+    display: inline-block;
+    padding: 0.9rem 2.8rem;
+    background: var(--ember);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 100px;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    animation: fadeUp 1.1s 0.3s ease both;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 24px rgba(255,77,28,0.4);
+  }
+
+  .hero-btn:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 8px 40px rgba(255,77,28,0.55);
+    background: #ff6233;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(255,248,239,0.4);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: fadeUp 1.3s 0.6s ease both;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,248,239,0.4), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%,100% { opacity: 0.4; transform: scaleY(1); }
+    50%      { opacity: 0.9; transform: scaleY(1.15); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,248,239,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(61,31,0,0.08);
+    padding: 0 clamp(1rem, 5vw, 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    transition: box-shadow 0.3s;
+  }
+
+  nav.scrolled { box-shadow: 0 4px 30px rgba(26,18,8,0.1); }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--charcoal);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo em {
+    color: var(--ember);
+    font-style: italic;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 0.3rem;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    padding: 0.45rem 1.1rem;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+    border: none;
+    background: transparent;
+  }
+
+  .nav-tab:hover { color: var(--charcoal); }
+
+  .nav-tab.active {
+    background: var(--ember);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(255,77,28,0.35);
+  }
+
+  /* ── MAIN CONTENT ── */
+  main { padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 5vw, 4rem); max-width: 1280px; margin: 0 auto; }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: var(--charcoal);
+    line-height: 1.1;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(61,31,0,0.2), transparent);
+  }
+
+  .section-count {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── MENU SECTION ── */
+  .menu-section { display: none; }
+  .menu-section.active { display: block; animation: sectionIn 0.4s ease; }
+
+  @keyframes sectionIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── GRID ── */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 20px 60px rgba(26,18,8,0.18);
+  }
+
+  .card-img-wrap {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f0e6d6, #e8d5bb);
+  }
+
+  .card-emoji {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5.5rem;
+    transition: transform 0.4s;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+  }
+
+  .card:hover .card-emoji { transform: scale(1.12) rotate(-4deg); }
+
+  .card-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .badge-spicy { background: rgba(192,57,43,0.15); color: var(--tag-red); }
+  .badge-veg   { background: rgba(45,122,79,0.12); color: var(--tag-green); }
+  .badge-new   { background: rgba(245,166,35,0.15); color: #9A6800; }
+  .badge-chef  { background: rgba(255,77,28,0.12); color: var(--ember); }
+
+  .card-body { padding: 1.2rem 1.4rem 1.4rem; }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    margin-top: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .card-footer {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ember);
+  }
+
+  .add-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--charcoal);
+    color: #fff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 4px 16px rgba(26,18,8,0.25);
+    flex-shrink: 0;
+  }
+
+  .add-btn:hover { background: var(--ember); transform: scale(1.1) rotate(90deg); }
+  .add-btn.added { background: var(--tag-green); animation: pop 0.3s ease; }
+
+  @keyframes pop {
+    0%  { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100%{ transform: scale(1); }
+  }
+
+  /* ── FEATURED STRIP ── */
+  .featured-strip {
+    background: linear-gradient(135deg, var(--charcoal) 0%, #2E1500 100%);
+    border-radius: 24px;
+    padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
+    margin-bottom: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .featured-strip::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(255,77,28,0.2) 0%, transparent 70%);
+  }
+
+  .featured-emoji-big { font-size: 5rem; flex-shrink: 0; filter: drop-shadow(0 8px 20px rgba(255,77,28,0.4)); }
+
+  .featured-text { position: relative; }
+
+  .featured-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .featured-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.15;
+  }
+
+  .featured-desc {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: rgba(255,248,239,0.55);
+    font-weight: 300;
+    max-width: 380px;
+  }
+
+  .featured-price-wrap {
+    margin-left: auto;
+    text-align: right;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .featured-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .featured-add {
+    margin-top: 0.6rem;
+    padding: 0.5rem 1.4rem;
+    border-radius: 100px;
+    background: var(--ember);
+    color: #fff;
+    border: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(255,77,28,0.4);
+  }
+
+  .featured-add:hover { transform: scale(1.05); box-shadow: 0 6px 30px rgba(255,77,28,0.6); }
+
+  /* ── CART ── */
+  .cart-fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--charcoal);
+    color: #fff;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(26,18,8,0.35);
+    transition: transform 0.2s, background 0.2s;
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .cart-fab:hover { background: var(--ember); transform: scale(1.1); }
+
+  .cart-count {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--ember);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.25s;
+  }
+
+  .cart-count.visible { opacity: 1; transform: scale(1); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 6rem;
+    right: 2rem;
+    background: var(--charcoal);
+    color: var(--cream);
+    padding: 0.75rem 1.4rem;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    box-shadow: 0 8px 30px rgba(26,18,8,0.3);
+    z-index: 300;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 4rem;
+    background: var(--charcoal);
+    padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 5vw, 4rem);
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--cream);
+  }
+
+  .footer-logo em { color: var(--ember); font-style: italic; }
+
+  .footer-tagline {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    color: rgba(255,248,239,0.35);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .footer-info {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 0.82rem;
+    color: rgba(255,248,239,0.5);
+  }
+
+  .footer-info strong { color: rgba(255,248,239,0.8); display: block; margin-bottom: 0.2rem; font-family: 'Playfair Display', serif; }
+
+  .footer-copy {
+    margin-top: 2rem;
+    font-size: 0.72rem;
+    color: rgba(255,248,239,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .featured-strip { flex-direction: column; text-align: center; }
+    .featured-price-wrap { margin-left: 0; text-align: center; }
+    .nav-tabs { max-width: calc(100vw - 8rem); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <!-- particles injected by JS -->
+  <p class="hero-eyebrow">Est. 2019 · Fine Casual Dining</p>
+  <h1 class="hero-title">
+    EMBER
+    <span>Kitchen</span>
+  </h1>
+  <p class="hero-tagline">Wood-fired flavours. Honest ingredients. Unforgettable meals.</p>
+  <button class="hero-btn" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Explore the Menu</button>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo"><em>E</em>MBER</div>
+  <ul class="nav-tabs" id="navTabs">
+    <li><button class="nav-tab active" data-section="starters">Starters</button></li>
+    <li><button class="nav-tab" data-section="mains">Mains</button></li>
+    <li><button class="nav-tab" data-section="pasta">Pasta & Rice</button></li>
+    <li><button class="nav-tab" data-section="grills">Grills</button></li>
+    <li><button class="nav-tab" data-section="desserts">Desserts</button></li>
+    <li><button class="nav-tab" data-section="drinks">Drinks</button></li>
+  </ul>
+</nav>
+
+<!-- MAIN MENU -->
+<main id="menu">
+
+  <!-- FEATURED -->
+  <div class="featured-strip">
+    <div class="featured-emoji-big">🥩</div>
+    <div class="featured-text">
+      <p class="featured-label">⭐ Chef's Signature</p>
+      <h2 class="featured-name">Ember-Smoked Wagyu Ribeye</h2>
+      <p class="featured-desc">48-hour dry-aged Australian wagyu, cherry-wood smoked, served with truffle jus and grilled asparagus.</p>
+    </div>
+    <div class="featured-price-wrap">
+      <div class="featured-price">₹2,200</div>
+      <button class="featured-add" onclick="addToCart('Wagyu Ribeye', 2200)">+ Add to Order</button>
+    </div>
+  </div>
+
+  <!-- STARTERS -->
+  <div class="menu-section active" id="section-starters">
+    <div class="section-header">
+      <h2 class="section-title">Starters</h2>
+      <div class="section-line"></div>
+      <span class="section-count">6 items</span>
+    </div>
+    <div class="menu-grid" id="grid-starters"></div>
+  </div>
+
+  <!-- MAINS -->
+  <div class="menu-section" id="section-mains">
+    <div class="section-header">
+      <h2 class="section-title">Main Course</h2>
+      <div class="section-line"></div>
+      <span class="section-count">6 items</span>
+    </div>
+    <div class="menu-grid" id="grid-mains"></div>
+  </div>
+
+  <!-- PASTA & RICE -->
+  <div class="menu-section" id="section-pasta">
+    <div class="section-header">
+      <h2 class="section-title">Pasta &amp; Rice</h2>
+      <div class="section-line"></div>
+      <span class="section-count">5 items</span>
+    </div>
+    <div class="menu-grid" id="grid-pasta"></div>
+  </div>
+
+  <!-- GRILLS -->
+  <div class="menu-section" id="section-grills">
+    <div class="section-header">
+      <h2 class="section-title">From the Grill</h2>
+      <div class="section-line"></div>
+      <span class="section-count">5 items</span>
+    </div>
+    <div class="menu-grid" id="grid-grills"></div>
+  </div>
+
+  <!-- DESSERTS -->
+  <div class="menu-section" id="section-desserts">
+    <div class="section-header">
+      <h2 class="section-title">Desserts</h2>
+      <div class="section-line"></div>
+      <span class="section-count">5 items</span>
+    </div>
+    <div class="menu-grid" id="grid-desserts"></div>
+  </div>
+
+  <!-- DRINKS -->
+  <div class="menu-section" id="section-drinks">
+    <div class="section-header">
+      <h2 class="section-title">Drinks</h2>
+      <div class="section-line"></div>
+      <span class="section-count">6 items</span>
+    </div>
+    <div class="menu-grid" id="grid-drinks"></div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><em>E</em>MBER Kitchen</div>
+  <p class="footer-tagline">Wood-fired · Honest · Unforgettable</p>
+  <div class="footer-info">
+    <div><strong>Address</strong>12 Flame Street, Koramangala, Bengaluru</div>
+    <div><strong>Hours</strong>Mon–Sun · 12 pm – 11 pm</div>
+    <div><strong>Reservations</strong>+91 98765 43210</div>
+  </div>
+  <p class="footer-copy">© 2026 EMBER Kitchen. All rights reserved.</p>
+</footer>
+
+<!-- CART FAB -->
+<button class="cart-fab" id="cartBtn" title="Cart">
+  🛒
+  <span class="cart-count" id="cartCount">0</span>
+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ <span id="toastMsg">Added to cart!</span></div>
+
+<script>
+// ── MENU DATA ──
+const menuData = {
+  starters: [
+    { name: "Burrata & Heirloom Tomatoes", desc: "Fresh burrata, heirloom tomatoes, aged balsamic glaze, micro basil.", price: 520, emoji: "🧀", badge: "veg" },
+    { name: "Crispy Calamari", desc: "Lightly battered squid rings, lemon aioli, smoked paprika dust.", price: 480, emoji: "🦑", badge: "chef" },
+    { name: "Ember-Charred Corn Soup", desc: "Roasted sweet corn, coconut cream, coriander oil drizzle.", price: 380, emoji: "🌽", badge: "veg" },
+    { name: "Spicy Chicken Wings", desc: "12 crispy wings, ghost pepper glaze, blue cheese dip.", price: 560, emoji: "🍗", badge: "spicy" },
+    { name: "Mushroom Bruschetta", desc: "Wild mushrooms, garlic confit, truffle oil on sourdough crostini.", price: 420, emoji: "🍄", badge: "veg" },
+    { name: "Tuna Tartare", desc: "Sashimi-grade tuna, avocado, sesame, ponzu dressing.", price: 640, emoji: "🐟", badge: "new" },
+  ],
+  mains: [
+    { name: "Butter Chicken", desc: "Slow-cooked in a rich tomato-cream sauce, served with butter naan.", price: 680, emoji: "🍛", badge: "chef" },
+    { name: "Grilled Sea Bass", desc: "Line-caught sea bass, lemon herb butter, wilted spinach, capers.", price: 860, emoji: "🐟", badge: "new" },
+    { name: "Lamb Rogan Josh", desc: "Slow-braised Kashmiri spiced lamb, saffron rice, raita.", price: 780, emoji: "🍲", badge: "spicy" },
+    { name: "Wild Mushroom Risotto", desc: "Arborio rice, porcini mushrooms, parmesan, truffle shavings.", price: 620, emoji: "🍚", badge: "veg" },
+    { name: "Duck Confit", desc: "48-hr confit duck leg, cherry gastrique, potato gratin, broccolini.", price: 920, emoji: "🦆", badge: "chef" },
+    { name: "Paneer Tikka Masala", desc: "Tandoor-kissed cottage cheese in vibrant masala, garlic naan.", price: 580, emoji: "🧆", badge: "veg" },
+  ],
+  pasta: [
+    { name: "Spaghetti Carbonara", desc: "Guanciale, egg yolk, Pecorino Romano, coarsely cracked pepper.", price: 580, emoji: "🍝", badge: "chef" },
+    { name: "Penne Arrabbiata", desc: "San Marzano tomatoes, fresh chilli, garlic, extra virgin olive oil.", price: 460, emoji: "🍝", badge: "spicy" },
+    { name: "Truffle Fettuccine", desc: "Fresh fettuccine, black truffle paste, parmesan, butter sauce.", price: 720, emoji: "🍜", badge: "new" },
+    { name: "Lobster Linguine", desc: "Half lobster, bisque sauce, cherry tomatoes, fresh tarragon.", price: 1100, emoji: "🦞", badge: "chef" },
+    { name: "Porcini Mushroom Gnocchi", desc: "Pillowy potato gnocchi, porcini cream, sage brown butter.", price: 560, emoji: "🥟", badge: "veg" },
+  ],
+  grills: [
+    { name: "BBQ Pork Ribs (Half Rack)", desc: "Slow-smoked baby back ribs, house BBQ sauce, coleslaw, corn.", price: 980, emoji: "🥩", badge: "chef" },
+    { name: "Chicken Piri Piri", desc: "Spatchcock chicken, Portuguese piri piri marinade, grilled lemon.", price: 760, emoji: "🍗", badge: "spicy" },
+    { name: "Lamb Chops", desc: "Three Frenched lamb chops, herb crust, chimichurri, grilled veg.", price: 1080, emoji: "🍖", badge: "new" },
+    { name: "Grilled Prawns", desc: "Tiger prawns, garlic butter, chilli flakes, crusty bread.", price: 860, emoji: "🍤", badge: "chef" },
+    { name: "Smoky Veggie Platter", desc: "Seasonal vegetables, halloumi, hummus, flatbread, herb oils.", price: 620, emoji: "🥦", badge: "veg" },
+  ],
+  desserts: [
+    { name: "Molten Lava Cake", desc: "Dark chocolate lava cake, vanilla bean ice cream, raspberry coulis.", price: 380, emoji: "🍫", badge: "chef" },
+    { name: "Crème Brûlée", desc: "Classic vanilla custard, caramelised sugar crust, fresh berries.", price: 340, emoji: "🍮", badge: "veg" },
+    { name: "Gulab Jamun Cheesecake", desc: "A playful fusion — spiced gulab jamun on creamy NY cheesecake.", price: 360, emoji: "🎂", badge: "new" },
+    { name: "Tiramisu", desc: "Savoiardi, espresso soak, mascarpone cream, cocoa dusting.", price: 360, emoji: "☕", badge: "veg" },
+    { name: "Mango Sorbet", desc: "Alphonso mango sorbet, chilli-lime zest, coconut tuile.", price: 280, emoji: "🥭", badge: "veg" },
+  ],
+  drinks: [
+    { name: "Wildflower Lemonade", desc: "Elderflower cordial, fresh lemon, mint, sparkling water.", price: 220, emoji: "🍋", badge: "veg" },
+    { name: "Mango Chilli Mocktail", desc: "Alphonso mango purée, jalapeño, lime, ginger beer.", price: 260, emoji: "🥭", badge: "spicy" },
+    { name: "Cold Brew Coffee", desc: "12-hour cold brew, oat milk, brown sugar syrup, ice.", price: 240, emoji: "☕", badge: "new" },
+    { name: "Berry Bliss Smoothie", desc: "Mixed berries, banana, Greek yoghurt, honey.", price: 280, emoji: "🍓", badge: "veg" },
+    { name: "Passion Fizz", desc: "Passion fruit, orange blossom, tonic, fresh mint.", price: 250, emoji: "🍹", badge: "chef" },
+    { name: "Masala Chai Latte", desc: "Spiced chai tea, steamed milk, cardamom, cinnamon foam.", price: 180, emoji: "🫖", badge: "veg" },
+  ],
+};
+
+const badgeLabels = { spicy: "🌶 Spicy", veg: "🌿 Veg", new: "✨ New", chef: "👨‍🍳 Chef's Pick" };
+const badgeClass  = { spicy: "badge-spicy", veg: "badge-veg", new: "badge-new", chef: "badge-chef" };
+
+let cartTotal = 0;
+
+// ── RENDER CARDS ──
+Object.keys(menuData).forEach(section => {
+  const grid = document.getElementById(`grid-${section}`);
+  menuData[section].forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${i * 0.06}s`;
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        <div class="card-emoji">${item.emoji}</div>
+        <span class="card-badge ${badgeClass[item.badge]}">${badgeLabels[item.badge]}</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-name">${item.name}</h3>
+        <p class="card-desc">${item.desc}</p>
+        <div class="card-footer">
+          <span class="card-price">₹${item.price.toLocaleString()}</span>
+          <button class="add-btn" title="Add to order">+</button>
+        </div>
+      </div>
+    `;
+    card.querySelector('.add-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      btn.textContent = '✓';
+      btn.classList.add('added');
+      setTimeout(() => { btn.textContent = '+'; btn.classList.remove('added'); }, 1200);
+      addToCart(item.name, item.price);
+    });
+    grid.appendChild(card);
+  });
+});
+
+// ── CART ──
+function addToCart(name, price) {
+  cartTotal++;
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = cartTotal;
+  countEl.classList.add('visible');
+  showToast(`${name} added!`);
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ── TABS ──
+document.getElementById('navTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.nav-tab');
+  if (!btn) return;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.menu-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`section-${btn.dataset.section}`).classList.add('active');
+  document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+});
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── FLAME PARTICLES ──
+(function spawnParticles() {
+  const hero = document.querySelector('.hero');
+  const colors = ['rgba(255,77,28,0.6)', 'rgba(245,166,35,0.5)', 'rgba(255,140,60,0.4)'];
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 6 + Math.random() * 14;
+    p.style.cssText = `
+      width:${size}px;height:${size * 1.6}px;
+      left:${5 + Math.random() * 90}%;
+      bottom:${Math.random() * 20}%;
+      background:${colors[Math.floor(Math.random() * colors.length)]};
+      animation-duration:${3 + Math.random() * 5}s;
+      animation-delay:-${Math.random() * 6}s;
+      opacity:0;
+    `;
+    hero.appendChild(p);
+  }
+})();
+
+// ── CART FAB WIGGLE ──
+document.getElementById('cartBtn').addEventListener('click', () => {
+  const count = cartTotal;
+  showToast(count === 0 ? 'Your cart is empty.' : `You have ${count} item${count > 1 ? 's' : ''} in cart!`);
+});
+</script>
+</body>
+</html>
